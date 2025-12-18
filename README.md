@@ -76,5 +76,3 @@ See `docs/architecture.md` for a deeper dive, and `docs/usage.md` for step‑by�
 - Swap `Serde` to a different implementation (e.g., use Hazelcast’s `SerializationService` by toggling the factory code).
 - Add new maps and types; register Compact serializers on the client and let the server persist via `GenericRecordMapStore`.
 - Replace `Db` with a real database layer (JDBC, JPA, etc.).
-
-For more, see `docs/extensibility.md`.

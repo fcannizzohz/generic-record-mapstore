@@ -40,6 +40,8 @@ The code is intentionally compact to make the data flow and extension points obv
 
 Because the backing `Db` is in‑memory, restarts do not retain data.
 
+> NOTE: there's no knowledge of domain object in the server.
+
 ## Map Configuration (Server)
 
 `server/src/main/java/.../Main.java`:
