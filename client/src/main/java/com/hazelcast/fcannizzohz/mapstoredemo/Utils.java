@@ -4,7 +4,9 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.CompactSerializationConfig;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.HazelcastJsonValue;
 import com.hazelcast.map.IMap;
+import com.hazelcast.shaded.org.json.JSONString;
 
 import java.net.InetSocketAddress;
 
@@ -35,6 +37,10 @@ public final class Utils {
 
     public static IMap<String, Bar> barMap() {
         return hz.getMap("barMap");
+    }
+
+    public static IMap<String, HazelcastJsonValue> geeMap() {
+        return hz.getMap("geeMap");
     }
 
 }

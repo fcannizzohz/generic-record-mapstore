@@ -1,53 +1,41 @@
 package com.hazelcast.fcannizzohz.mapstoredemo;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.internal.serialization.Data;
-import com.hazelcast.internal.serialization.SerializationService;
-import com.hazelcast.internal.serialization.impl.HeapData;
-import com.hazelcast.spi.impl.SerializationServiceSupport;
+import com.hazelcast.core.HazelcastJsonValue;
 import com.hazelcast.map.MapLoaderLifecycleSupport;
 import com.hazelcast.map.MapStore;
 import com.hazelcast.nio.serialization.genericrecord.GenericRecord;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public class GenericRecordMapStore
-        implements MapStore<String, GenericRecord>, MapLoaderLifecycleSupport {
+public class JsonValueMapStore
+        implements MapStore<String, HazelcastJsonValue>, MapLoaderLifecycleSupport {
 
-    private final Db db;
-    private Serde serde;
-
-    GenericRecordMapStore(Db db) {
-        this.db = db;
-    }
-
-    GenericRecordMapStore(Db db, Serde serde) {
-        this.serde = serde;
-        this.db = db;
-    }
+    private Db db;
 
     @Override
     public void init(HazelcastInstance hazelcastInstance, Properties properties, String mapName) {
-        if(this.serde != null) {
-            return;
-        }
-        this.serde = new SerializationServiceSerde(hazelcastInstance);
-        System.out.println("initialised with serde " + serde);
+        db = Db.getInstance();
     }
 
     @Override
-    public void store(String s, GenericRecord v) {
+    public void store(String s, HazelcastJsonValue v) {
         System.out.println("storing " + s + ": " + v);
-        db.store(s, serde.toBytes(v));
+        db.store(s, v.getValue().getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
-    public void storeAll(Map<String, GenericRecord> map) {
+    public void storeAll(Map<String, HazelcastJsonValue> map) {
         System.out.println("storing all data");
-        map.entrySet().iterator().forEachRemaining(e -> this.store(e.getKey(), e.getValue()));
+        map.entrySet()
+           .iterator()
+           .forEachRemaining(
+                   e -> this.store(e.getKey(), e.getValue())
+           );
     }
 
     @Override
@@ -61,20 +49,23 @@ public class GenericRecordMapStore
     }
 
     @Override
-    public GenericRecord load(String s) {
+    public HazelcastJsonValue load(String s) {
         byte[] o = db.load(s);
-        return serde.fromBytes(o);
+        if(o == null) {
+            return null;
+        }
+        return new HazelcastJsonValue(new String(o, StandardCharsets.UTF_8));
     }
 
     @Override
-    public Map<String, GenericRecord> loadAll(Collection<String> keys) {
+    public Map<String, HazelcastJsonValue> loadAll(Collection<String> keys) {
         System.out.println("loading all: " + keys);
         return keys.stream()
                    .map(k -> Map.entry(k, db.load(k)))
                    .filter(e -> e.getValue() != null)
                    .collect(Collectors.toMap(
                            Map.Entry::getKey,
-                           e -> serde.fromBytes(e.getValue()),
+                           e -> new HazelcastJsonValue(new String(e.getValue())),
                            (a, _) -> a
                    ));
     }
