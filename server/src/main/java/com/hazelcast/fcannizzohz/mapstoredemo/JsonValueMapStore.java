@@ -4,7 +4,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.HazelcastJsonValue;
 import com.hazelcast.map.MapLoaderLifecycleSupport;
 import com.hazelcast.map.MapStore;
-import com.hazelcast.nio.serialization.genericrecord.GenericRecord;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -31,11 +30,7 @@ public class JsonValueMapStore
     @Override
     public void storeAll(Map<String, HazelcastJsonValue> map) {
         System.out.println("storing all data");
-        map.entrySet()
-           .iterator()
-           .forEachRemaining(
-                   e -> this.store(e.getKey(), e.getValue())
-           );
+        map.entrySet().iterator().forEachRemaining(e -> this.store(e.getKey(), e.getValue()));
     }
 
     @Override
@@ -51,7 +46,7 @@ public class JsonValueMapStore
     @Override
     public HazelcastJsonValue load(String s) {
         byte[] o = db.load(s);
-        if(o == null) {
+        if (o == null) {
             return null;
         }
         return new HazelcastJsonValue(new String(o, StandardCharsets.UTF_8));
@@ -60,17 +55,8 @@ public class JsonValueMapStore
     @Override
     public Map<String, HazelcastJsonValue> loadAll(Collection<String> keys) {
         System.out.println("loading all: " + keys);
-        return keys.stream()
-                   .map(k -> Map.entry(k, db.load(k)))
-                   .filter(e -> e.getValue() != null)
-                   .collect(Collectors.toMap(
-                           Map.Entry::getKey,
-                           e -> new HazelcastJsonValue(new String(e.getValue())),
-                           (a, _) -> a
-                   ));
+        return keys.stream().map(k -> Map.entry(k, db.load(k))).filter(e -> e.getValue() != null).collect(Collectors.toMap(Map.Entry::getKey, e -> new HazelcastJsonValue(new String(e.getValue())), (a, _) -> a));
     }
-
-
 
     @Override
     public Iterable<String> loadAllKeys() {

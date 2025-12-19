@@ -7,7 +7,8 @@ import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import com.hazelcast.nio.serialization.genericrecord.GenericRecord;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
-public final class KryoSerde implements Serde {
+public final class KryoSerde
+        implements Serde {
 
     private final ThreadLocal<Kryo> kryoTL;
 
@@ -15,16 +16,16 @@ public final class KryoSerde implements Serde {
         this.kryoTL = ThreadLocal.withInitial(() -> {
             Kryo kryo = new Kryo();
             kryo.setRegistrationRequired(false);
-            kryo.setInstantiatorStrategy(
-                    new DefaultInstantiatorStrategy(new StdInstantiatorStrategy())
-            );
+            kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
             return kryo;
         });
     }
 
     @Override
     public byte[] toBytes(GenericRecord v) {
-        if (v == null) return null;
+        if (v == null) {
+            return null;
+        }
         Kryo kryo = kryoTL.get();
         try (Output out = new Output(1024, -1)) {
             kryo.writeClassAndObject(out, v);
@@ -34,7 +35,9 @@ public final class KryoSerde implements Serde {
 
     @Override
     public GenericRecord fromBytes(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) return null;
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
         Kryo kryo = kryoTL.get();
         try (Input in = new Input(bytes)) {
             Object obj = kryo.readClassAndObject(in);

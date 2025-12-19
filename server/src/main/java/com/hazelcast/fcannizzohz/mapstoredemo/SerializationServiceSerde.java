@@ -9,12 +9,16 @@ import com.hazelcast.spi.impl.SerializationServiceSupport;
 
 import java.util.Objects;
 
-public class SerializationServiceSerde implements Serde {
+/**
+ * This implementation uses Hazelcast's internal API.
+ */
+public class SerializationServiceSerde
+        implements Serde {
 
     private final SerializationService serializationService;
 
     public SerializationServiceSerde(HazelcastInstance hazelcastInstance) {
-        this(((SerializationServiceSupport)hazelcastInstance).getSerializationService());
+        this(((SerializationServiceSupport) hazelcastInstance).getSerializationService());
     }
 
     public SerializationServiceSerde(SerializationService serializationService) {
@@ -30,16 +34,13 @@ public class SerializationServiceSerde implements Serde {
 
     @Override
     public GenericRecord fromBytes(byte[] bytes) {
-        if(Objects.isNull(bytes) || bytes.length == 0) {
+        if (Objects.isNull(bytes) || bytes.length == 0) {
             return null;
         }
         Data data = new HeapData(bytes);
         Object obj = serializationService.toObject(data);
         if (!(obj instanceof GenericRecord gr)) {
-            throw new IllegalStateException(
-                    "Expected GenericRecord but got " +
-                            (obj == null ? "null" : obj.getClass().getName())
-            );
+            throw new IllegalStateException("Expected GenericRecord but got " + (obj == null ? "null" : obj.getClass().getName()));
         }
         return gr;
     }

@@ -2,8 +2,9 @@ package com.hazelcast.fcannizzohz.mapstoredemo;
 
 public abstract class Message<T> {
 
-    private int id;
-    private T payload;
+    private final int id;
+    private final T payload;
+
     public Message(int id, T payload) {
         this.id = id;
         this.payload = payload;

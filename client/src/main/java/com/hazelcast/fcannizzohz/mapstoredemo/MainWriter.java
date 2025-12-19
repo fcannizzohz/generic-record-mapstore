@@ -1,10 +1,6 @@
 package com.hazelcast.fcannizzohz.mapstoredemo;
 
 import com.hazelcast.core.HazelcastJsonValue;
-import com.hazelcast.map.IMap;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static com.hazelcast.fcannizzohz.mapstoredemo.Utils.barMap;
 import static com.hazelcast.fcannizzohz.mapstoredemo.Utils.fooMap;

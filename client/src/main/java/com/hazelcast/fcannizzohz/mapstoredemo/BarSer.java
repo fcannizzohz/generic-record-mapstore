@@ -4,7 +4,8 @@ import com.hazelcast.nio.serialization.compact.CompactReader;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
 import com.hazelcast.nio.serialization.compact.CompactWriter;
 
-public class BarSer implements CompactSerializer<Bar> {
+public class BarSer
+        implements CompactSerializer<Bar> {
     @Override
     public Bar read(CompactReader compactReader) {
         return new Bar(compactReader.readInt32("id"), compactReader.readInt64("payload"));

@@ -6,23 +6,10 @@ import com.hazelcast.config.CompactSerializationConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.HazelcastJsonValue;
 import com.hazelcast.map.IMap;
-import com.hazelcast.shaded.org.json.JSONString;
-
-import java.net.InetSocketAddress;
 
 public final class Utils {
 
     private static final HazelcastInstance hz;
-
-    static {
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.getSerializationConfig()
-                    .setCompactSerializationConfig(new CompactSerializationConfig()
-                            .setSerializers(new FooSer(), new BarSer())
-                    );
-        hz = HazelcastClient.newHazelcastClient(clientConfig);
-        System.out.println("Hazelcast Client: " + hz);
-    }
 
     private Utils() {
     }
@@ -41,6 +28,13 @@ public final class Utils {
 
     public static IMap<String, HazelcastJsonValue> geeMap() {
         return hz.getMap("geeMap");
+    }
+
+    static {
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.getSerializationConfig().setCompactSerializationConfig(new CompactSerializationConfig().setSerializers(new FooSer(), new BarSer()));
+        hz = HazelcastClient.newHazelcastClient(clientConfig);
+        System.out.println("Hazelcast Client: " + hz);
     }
 
 }

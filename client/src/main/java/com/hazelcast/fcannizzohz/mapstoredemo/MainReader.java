@@ -26,13 +26,13 @@ public class MainReader {
                 System.out.println("foo keys: " + fooMap.keySet());
                 System.out.println("plop keys: " + plopMap.keySet());
                 Foo fooVal = fooMap.get("foo1Key");
-                System.out.println("reading foo1Key: "  + fooVal);
+                System.out.println("reading foo1Key: " + fooVal);
                 Bar barVal = barMap.get("bar1Key");
-                System.out.println("reading foo2Key: "  + barVal);
+                System.out.println("reading foo2Key: " + barVal);
                 Plop plopVal = plopMap.get("plop1Key");
-                System.out.println("reading plop1Key: "  + plopVal);
+                System.out.println("reading plop1Key: " + plopVal);
                 HazelcastJsonValue json = geeMap.get("gee1Key");
-                System.out.println("reading gee1Key: "  + json);
+                System.out.println("reading gee1Key: " + json);
             }
         }, 0, 3, TimeUnit.SECONDS);
     }
