@@ -7,9 +7,16 @@ import static com.hazelcast.fcannizzohz.mapstoredemo.Utils.fooMap;
 import static com.hazelcast.fcannizzohz.mapstoredemo.Utils.geeMap;
 import static com.hazelcast.fcannizzohz.mapstoredemo.Utils.plopMap;
 
+/**
+ * Demo client that writes sample entries to the demo maps.
+ */
 public class MainWriter {
-    public static void main(String[] args)
-            throws InterruptedException {
+    /**
+     * Populates the server with a few sample entries.
+     *
+     * @param args ignored
+     */
+    public static void main(String[] args) {
         Plop plop = new Plop(2, System.currentTimeMillis());
         plopMap().put("plop1Key", plop);
         System.out.println("written plop1Key: " + plop);

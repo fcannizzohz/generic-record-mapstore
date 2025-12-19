@@ -10,7 +10,7 @@ import com.hazelcast.spi.impl.SerializationServiceSupport;
 import java.util.Objects;
 
 /**
- * This implementation uses Hazelcast's internal API.
+ * This implementation uses Hazelcast's internal API and provided only for illustration purposes only.
  */
 public class SerializationServiceSerde
         implements Serde {

@@ -7,11 +7,20 @@ import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import com.hazelcast.nio.serialization.genericrecord.GenericRecord;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
+/**
+ * {@link Serde} implementation based on the Kryo serialization library.
+ *
+ * <p>Uses a {@link ThreadLocal} {@link Kryo} instance configured to not require registration and with
+ * a {@link DefaultInstantiatorStrategy} to support classes without no-arg constructors.</p>
+ */
 public final class KryoSerde
         implements Serde {
 
     private final ThreadLocal<Kryo> kryoTL;
 
+    /**
+     * Creates a new instance with lazy-initialized, thread-local {@link Kryo} instances.
+     */
     public KryoSerde() {
         this.kryoTL = ThreadLocal.withInitial(() -> {
             Kryo kryo = new Kryo();
@@ -21,6 +30,7 @@ public final class KryoSerde
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public byte[] toBytes(GenericRecord v) {
         if (v == null) {
@@ -33,6 +43,7 @@ public final class KryoSerde
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public GenericRecord fromBytes(byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
